@@ -94,7 +94,7 @@ namespace DefenceAligner
             }
         }
         // 新しい割り当てアルゴリズム実装
-        internal void DoAlignment(int max_slot, int nepoch, int niter, double tconst)
+        internal void DoAlignment_bak(int max_slot, int nepoch, int niter, double tconst)
         {
             var opt = new AlignmentOptimizer(excel2DB.DB, max_slot);
             Chart chart = (Chart)form.GetControl("グラフ");
@@ -137,13 +137,14 @@ namespace DefenceAligner
             int max_room = all_room.Count-1;
             for (int event_id = 0; event_id < n_event; event_id++)
             {
+                bool event_allocated = false;
                 for (int slot = 0; slot < max_slot; slot++)
                 {
                     if (room_no[slot] == max_room)
                         continue;
                     if (slotevent[slot, event_id] == 1)
                     {
-                        DefenceEvent d_ev = excel2DB.DB.GetEvent(event_id + 1);
+                        DefenseEvent d_ev = excel2DB.DB.GetEvent(event_id + 1);
                         var ev = new Event(d_ev.Student_No);
                         for (int i = 0; i < 5; i++)
                         {
@@ -154,16 +155,23 @@ namespace DefenceAligner
                         }
                         all_room[room_no[slot]].addEvent(ev, slot);
                         room_no[slot]++;
+                        event_allocated = true;
                         break;
                     }
 
+                }
+                if (!event_allocated)
+                {
+                    MessageBox.Show("審査"+event_id.ToString()+"が割り当てられませんでした", "Impossible",
+                             MessageBoxButtons.OK,
+                             MessageBoxIcon.Information);
                 }
             }
             // 不都合日程割り当て
             for (int slot = 0; slot < max_slot; slot++)
             {
                 var ev = new Event("不都合" + slot.ToString());
-                foreach (var prof_id in excel2DB.DB.GetProhibitProfs(slot))
+                foreach (var prof_id in excel2DB.DB.GetProhibitProfs(slot+1))
                 {
                     var name = excel2DB.DB.GetProfessorName(prof_id);
                     ev.Attendees.Add(pool.Get(name));
@@ -210,7 +218,7 @@ namespace DefenceAligner
             OutputResult(resultfilename, "<?xml version = \"1.0\" encoding = \"UTF-8\" ?>" + rooms.ToString());
         }
 
-        internal void DoAlignment0(int max_slot, int nepoch, int niter, double tconst)
+        internal void DoAlignment(int max_slot, int nepoch, int niter, double tconst)
         {
             Chart chart = (Chart)form.GetControl("グラフ");
             Label countlabel = (Label)form.GetControl("重複数");
@@ -256,7 +264,7 @@ namespace DefenceAligner
             for (int slot = 0; slot < max_slot; slot++)
             {
                 var ev = new Event("不都合" + slot.ToString());
-                foreach (var prof_id in excel2DB.DB.GetProhibitProfs(slot))
+                foreach (var prof_id in excel2DB.DB.GetProhibitProfs(slot+1))
                 {
                     var name = excel2DB.DB.GetProfessorName(prof_id);
                     ev.Attendees.Add(pool.Get(name));
@@ -295,25 +303,51 @@ namespace DefenceAligner
 
             rooms.anneal(inittemp2, nepoch, niter, tconst, pool.maxid+1, callbacklinear,true);
 
-            OutputResult("output.csv", "<?xml version = \"1.0\" encoding = \"UTF-8\" ?>"+rooms.ToString());
+            string resultfilename = Program.GetFilename("output.csv", "Text CSV (*.csv)|*.csv|All files(*.*)|*.*");
+            if (resultfilename == null)
+            {
+                MessageBox.Show("中止しました", "Aborted",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Exclamation);
+                return;
+            }
+            OutputResult(resultfilename, "<?xml version = \"1.0\" encoding = \"UTF-8\" ?>" + rooms.ToString());
+            //OutputResult("output.csv", "<?xml version = \"1.0\" encoding = \"UTF-8\" ?>"+rooms.ToString());
+            string listfilename = Program.GetFilename("alllist.csv", "Text CSV (*.csv)|*.csv|All files(*.*)|*.*");
+            if (resultfilename == null)
+            {
+                MessageBox.Show("中止しました", "Aborted",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Exclamation);
+                return;
+            }
+            excel2DB.DB.WriteProfDefenseList(listfilename);
         }
 
         void OutputResult(string outfile, string result)
         {
+            using (StreamWriter wr = new StreamWriter("output.xml"))
+            {
+                wr.WriteLine(result);
+            }
             var resultxml = XDocument.Parse(result);
             var roomname = new List<string>();
             var events = new List<List<string>>();
             var eventnames = new List<List<string>>();
             int eventmax = 0;
+            int nroom = 0;
             foreach (XElement r in resultxml.Element("rooms").Elements("room"))
             {
                 roomname.Add(r.Attribute("name").Value);
+                nroom++;
                 var ev = new List<string>();
                 var evname = new List<string>();
                 int n = 0;
                 foreach (XElement e in r.Elements("event"))
                 {
-                    evname.Add(e.Attribute("name").Value);
+                    var student_id = e.Attribute("name").Value;
+                    evname.Add(student_id);
+                    excel2DB.DB.PutEventSlotRoom(student_id, n + 1, nroom);
                     var att = new StringBuilder();
                     foreach (var a in e.Elements("attendee")) {
                         att.Append(a.Attribute("name").Value);

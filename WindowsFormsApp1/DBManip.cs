@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SQLite;
@@ -54,7 +54,9 @@ namespace DefenceAligner
                         "ID2 INTEGER," +
                         "ID3 INTEGER," +
                         "ID4 INTEGER," +
-                        "ID5 INTEGER)";
+                        "ID5 INTEGER," +
+                        "SLOT INTEGER," +
+                        "ROOM INTEGER)";
                     cmd.ExecuteNonQuery();
                 }
                 if (!TableExists("rooms"))
@@ -207,8 +209,18 @@ namespace DefenceAligner
                 cmd.ExecuteNonQuery();
             }
         }
+        // イベントにスロットと部屋を登録
+        public void PutEventSlotRoom(string student_id, int slot, int room)
+        {
+            using (var cmd = conn.CreateCommand())
+            {
+                var sql = "UPDATE events SET SLOT=" + slot.ToString() + ", ROOM=" + room.ToString() + " WHERE STUDENT_NO='" + student_id + "'";
+                cmd.CommandText = sql;
+                cmd.ExecuteNonQuery();
+            }
+        }
         // 部屋の登録
-        public void PutRoom(string roomname)
+            public void PutRoom(string roomname)
         {
             using (var cmd = conn.CreateCommand())
             {
@@ -387,7 +399,7 @@ namespace DefenceAligner
             }
         }
         // 全ての審査エントリについて繰り返す
-        public IEnumerable<DefenceEvent> EachEvent()
+        public IEnumerable<DefenseEvent> EachEvent()
         {
             using (var cmd = conn.CreateCommand())
             {
@@ -396,7 +408,7 @@ namespace DefenceAligner
                 {
                     while (reader.Read())
                     {
-                        var ev = new DefenceEvent(
+                        var ev = new DefenseEvent(
                             reader.GetInt32(0),   // ID
                             reader.GetString(1),  // DEGREE
                             reader.GetString(2),  // STUDENT_NO
@@ -415,9 +427,9 @@ namespace DefenceAligner
             }
         }
         // IDから審査イベントを返す
-        public DefenceEvent GetEvent(int id)
+        public DefenseEvent GetEvent(int id)
         {
-            DefenceEvent ev = null;
+            DefenseEvent ev = null;
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText = "SELECT * FROM events WHERE ID="+id.ToString()+";";
@@ -425,7 +437,7 @@ namespace DefenceAligner
                 {
                     if (reader.Read())
                     {
-                        ev = new DefenceEvent(
+                        ev = new DefenseEvent(
                             reader.GetInt32(0),   // ID
                             reader.GetString(1),  // DEGREE
                             reader.GetString(2),  // STUDENT_NO
@@ -563,6 +575,36 @@ namespace DefenceAligner
                     room_id.ToString() + "," +
                     slot_id.ToString() + ")";
                 cmd.ExecuteNonQuery();
+            }
+        }
+
+        // 教員の担当学生一覧
+        public void WriteProfDefenseList(string filename)
+        {
+            var quote = "\"";
+            var quotec = "\",\"";
+            using (var wr = new StreamWriter(filename))
+            {
+                wr.WriteLine("\"教員氏名\",\"学籍番号\",\"学生氏名\",\"発表日\",\"時間\",\"審査室\"");
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT professor.NAME, events.STUDENT_NO, events.STUDENT_NAME, slot.DATE, slot.TIME, rooms.ROOM_NAME " +
+                        "from ((events INNER JOIN professor ON events.ID1 = professor.ID OR events.ID2 = professor.ID OR events.ID3 = professor.ID OR events.ID4 = professor.ID OR " +
+                        "events.ID5 = professor.ID) INNER JOIN slot ON slot.SLOT = events.SLOT) INNER JOIN rooms ON rooms.ROOM_ID = events.ROOM ORDER BY professor.NAME, slot.DATE, slot.TIME";
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            wr.Write(quote + reader.GetString(0) + quotec);
+                            wr.Write(reader.GetString(1) + quotec);
+                            wr.Write(reader.GetString(2) + quotec);
+                            wr.Write(reader.GetString(3) + quotec);
+                            wr.Write(reader.GetString(4) + quotec);
+                            wr.WriteLine(reader.GetString(5) + quote);
+                        }
+                    }
+                }
+
             }
         }
     }

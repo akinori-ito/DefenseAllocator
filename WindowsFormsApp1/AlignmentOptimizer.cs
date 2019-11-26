@@ -23,10 +23,10 @@ namespace DefenceAligner
         public int TotalConflict { get; private set; }
         public int MaxEventsInSlot { get; private set; }
         AvailableSlots availslots;
-        List<DefenceEvent> all_event;
+        List<DefenseEvent> all_event;
 
         const double CONFLICT_SCORE = 100.0;
-        public SlotEvent(int max_slot, int n_event, List<DefenceEvent> all_event, AvailableSlots availslots)
+        public SlotEvent(int max_slot, int n_event, List<DefenseEvent> all_event, AvailableSlots availslots)
         {
             this.max_slot = max_slot;
             this.n_event = n_event;
@@ -227,8 +227,8 @@ namespace DefenceAligner
             }
             // イベントごとに可能なスロットを計算
             bool[] avail = new bool[max_slot];
-            var all_event = new List<DefenceEvent>();
-            foreach (DefenceEvent ev in db.EachEvent())
+            var all_event = new List<DefenseEvent>();
+            foreach (DefenseEvent ev in db.EachEvent())
             {
                 all_event.Add(ev);
                 for (int i = 0; i < max_slot; i++)
