@@ -68,7 +68,8 @@ namespace DefenceAligner
                 {
                     app.ReadExcel(files[i]);
 
-                } catch (DatabaseException ex)
+                }
+                catch (DatabaseException ex)
                 {
                     MessageBox.Show(ex.ToString(), "エラー",
                                      MessageBoxButtons.OK,
@@ -138,13 +139,48 @@ namespace DefenceAligner
 
         private void DoAlignment(object sender, EventArgs e)
         {
-            app.DoAlignment(Int32.Parse(textBox1.Text), 
+            app.DoAlignment(Int32.Parse(textBox1.Text),
                 Int32.Parse(textBox2.Text),
                 Int32.Parse(textBox3.Text),
                 Double.Parse(textBox4.Text));
             MessageBox.Show("計算終了", "Finished",
                                MessageBoxButtons.OK,
                                MessageBoxIcon.Information);
+        }
+
+        private void excelOpenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var dialog = new OpenFileDialog
+            {
+                FileName = "",
+                Filter = "Excel worksheet(*.xlsx)|*.xlsx|すべてのファイル(*.*)|*.*",
+                FilterIndex = 1,
+                Title = "論文審査データのExcelファイルを指定してください",
+                CheckFileExists = true
+            };
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                //OKボタンがクリックされたとき、選択されたファイル名を表示する
+                try
+                {
+                    app.ReadExcel(dialog.FileName);
+
+                }
+                catch (DatabaseException ex)
+                {
+                    MessageBox.Show(ex.ToString(), "エラー",
+                                     MessageBoxButtons.OK,
+                                     MessageBoxIcon.Error);
+                    return;
+
+                }
+
+            }
+            app.DisplayExaminer(listBox1);
+            app.DisplayRooms(listBox3);
+            app.DisplaySlot(listBox4);
+            app.DisplayStudent(listBox2);
+            app.SetSlotNumber();
         }
     }
 }
