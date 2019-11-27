@@ -36,8 +36,8 @@
             System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.aaaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.終了ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.excelファイルを開くToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.終了ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.編集ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.実行ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.割り当て実行ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,6 +72,8 @@
             this.label17 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
@@ -99,19 +101,19 @@
             this.aaaToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
             this.aaaToolStripMenuItem.Text = "ファイル";
             // 
-            // 終了ToolStripMenuItem
-            // 
-            this.終了ToolStripMenuItem.Name = "終了ToolStripMenuItem";
-            this.終了ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.終了ToolStripMenuItem.Text = "終了";
-            this.終了ToolStripMenuItem.Click += new System.EventHandler(this.MenuExit);
-            // 
             // excelファイルを開くToolStripMenuItem
             // 
             this.excelファイルを開くToolStripMenuItem.Name = "excelファイルを開くToolStripMenuItem";
-            this.excelファイルを開くToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.excelファイルを開くToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.excelファイルを開くToolStripMenuItem.Text = "Excelファイルを開く";
             this.excelファイルを開くToolStripMenuItem.Click += new System.EventHandler(this.excelOpenToolStripMenuItem_Click);
+            // 
+            // 終了ToolStripMenuItem
+            // 
+            this.終了ToolStripMenuItem.Name = "終了ToolStripMenuItem";
+            this.終了ToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.終了ToolStripMenuItem.Text = "終了";
+            this.終了ToolStripMenuItem.Click += new System.EventHandler(this.MenuExit);
             // 
             // 編集ToolStripMenuItem
             // 
@@ -473,11 +475,31 @@
             this.label19.TabIndex = 30;
             this.label19.Text = "審査室";
             // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(792, 118);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(37, 15);
+            this.label20.TabIndex = 31;
+            this.label20.Text = "回数";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(852, 118);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(15, 15);
+            this.label21.TabIndex = 32;
+            this.label21.Text = "0";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1067, 562);
+            this.Controls.Add(this.label21);
+            this.Controls.Add(this.label20);
             this.Controls.Add(this.label19);
             this.Controls.Add(this.label18);
             this.Controls.Add(this.label17);
@@ -563,6 +585,8 @@
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.ToolStripMenuItem excelファイルを開くToolStripMenuItem;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label21;
     }
 }
 

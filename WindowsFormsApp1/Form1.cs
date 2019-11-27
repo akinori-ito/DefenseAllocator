@@ -35,7 +35,8 @@ namespace DefenceAligner
                 { "チェックマーク：不都合日程", label14 },
                 { "チェックマーク：審査リスト", label16 },
                 { "チェックマーク：審査室", label18 },
-                { "グラフ", chart2 }
+                { "グラフ", chart2 },
+                { "回数", label21 }
             };
 
         }
@@ -181,6 +182,13 @@ namespace DefenceAligner
             app.DisplaySlot(listBox4);
             app.DisplayStudent(listBox2);
             app.SetSlotNumber();
+        }
+
+        public void SetIterNum(int num)
+        {
+            Label l = (Label)GetControl("回数");
+            l.Text = num.ToString();
+            l.Refresh();
         }
     }
 }

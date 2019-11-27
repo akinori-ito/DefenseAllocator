@@ -277,10 +277,12 @@ namespace DefenceAligner
             // ここから本番
             void callbacklinear(int epoch, int iter, double lossval, int losscount)
             {
-                series.Points.AddXY(epoch * niter + iter, lossval);
+                int n = epoch * niter + iter;
+                series.Points.AddXY(n, lossval);
                 chart.Update();
                 countlabel.Text = losscount.ToString();
                 countlabel.Refresh();
+                form.SetIterNum(n);
             }
             double inittemp = 50.0;
             for (int failiter = 0; failiter < 3; failiter++)
