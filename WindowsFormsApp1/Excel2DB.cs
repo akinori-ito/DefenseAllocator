@@ -272,6 +272,59 @@ namespace DefenceAligner
                 }
             }
         }
+        // 部屋の利用日程読み込み
+        public void ReadRoomProhibit(ISheet sheet)
+        {
+            // 実際のデータは4列目から始まる
+            // 1行目は日付、２行目は時間
+            // それぞれスロットに対応するかをまずチェックする
+            IRow row0 = sheet.GetRow(0);
+            IRow row1 = sheet.GetRow(1);
+            string curdate = "";
+            int lastCellNum = row1.LastCellNum;
+            int[] colslot = new int[lastCellNum];
+            for (int i = 0; i < lastCellNum; i++)
+                colslot[i] = -1;
+            for (int i = 3; i < lastCellNum; i++)
+            {
+                string date = GetColumnString(row0, i);
+                if (date == "")
+                    date = curdate;
+                else
+                {
+                    date = date.Replace("\r", "").Replace("\n", "");
+                    curdate = date;
+                }
+                string time = GetColumnString(row1, i);
+                if (time == "")
+                    break;
+                int slot = DB.GetSlot(date, time);
+                colslot[i] = slot;
+            }
+            // 不都合日程の登録
+            for (int rownum = 2; rownum < sheet.LastRowNum; rownum++)
+            {
+                var row = sheet.GetRow(rownum);
+                string room = GetColumnString(row, 1);
+                if (room == "")
+                    continue;
+                int room_id = DB.GetRoomID(room);
+                if (room_id < 0)
+                {
+                    throw new DatabaseException("会場が登録されていません：" + room);
+                }
+                for (int i = 3; i < lastCellNum; i++)
+                {
+                    if (colslot[i] < 0)
+                        break;
+                    string s = GetColumnString(row, i);
+                    if (s != "")
+                    {
+                        DB.PutProhibitRoom(room_id, colslot[i]);
+                    }
+                }
+            }
+        }
     }
 }
 
