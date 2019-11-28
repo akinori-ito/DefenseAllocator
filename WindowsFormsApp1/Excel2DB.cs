@@ -69,7 +69,14 @@ namespace DefenceAligner
                     row++;
                     continue;
                 }
-                var strval = c.StringCellValue;
+                string strval;
+                try
+                {
+                    strval = c.StringCellValue;
+                } catch (Exception exc)
+                {
+                    strval = "";
+                }
                 row++;
                 if (strval == "")
                     break;
@@ -86,7 +93,9 @@ namespace DefenceAligner
             int row = 1;
             while (true)
             {
-                var strval = sheet.GetRow(row).GetCell(col).StringCellValue;
+                var r = sheet.GetRow(row);
+                if (r == null) break;
+                var strval = r.GetCell(col).StringCellValue;
                 if (strval == "")
                     break;
                 if (strval == "―" ||
@@ -184,6 +193,7 @@ namespace DefenceAligner
             form.CheckMark("チェックマーク：審査リスト", true);
             ReadExProhibit(book.GetSheetAt(2));
             form.CheckMark("チェックマーク：不都合日程", true);
+            ReadRoomProhibit(book.GetSheetAt(3));
         }
         // 学生情報読み込み
         public void ReadDaimoku(ISheet sheet)
@@ -245,6 +255,7 @@ namespace DefenceAligner
                 string time = GetColumnString(row1, i);
                 if (time == "")
                     break;
+                time = time.Replace(" ", "");
                 int slot = DB.GetSlot(date, time);
                 colslot[i] = slot;
             }
@@ -298,6 +309,7 @@ namespace DefenceAligner
                 string time = GetColumnString(row1, i);
                 if (time == "")
                     break;
+                time = time.Replace(" ", "").Replace("\r", "").Replace("\n", "");
                 int slot = DB.GetSlot(date, time);
                 colslot[i] = slot;
             }
@@ -308,7 +320,7 @@ namespace DefenceAligner
                 string room = GetColumnString(row, 1);
                 if (room == "")
                     continue;
-                int room_id = DB.GetRoomID(room);
+                int room_id = DB.GetRoomID(room.Replace(" ",""));
                 if (room_id < 0)
                 {
                     throw new DatabaseException("会場が登録されていません：" + room);
