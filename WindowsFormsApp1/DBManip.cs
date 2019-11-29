@@ -577,6 +577,22 @@ namespace DefenceAligner
                 cmd.ExecuteNonQuery();
             }
         }
+        // 使えない部屋とスロット一覧で繰り返す
+        public IEnumerable<Tuple<int,int>> EachProhibitRoom()
+        {
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = "SELECT * FROM room_prohibit";
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        yield return new Tuple<int,int>(reader.GetInt32(0),reader.GetInt32(1));
+                    }
+                }
+            }
+
+        }
 
         // 教員の担当学生一覧
         public void WriteProfDefenseList(string filename)

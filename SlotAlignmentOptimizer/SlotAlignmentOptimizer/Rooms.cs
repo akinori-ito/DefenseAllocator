@@ -29,7 +29,8 @@ namespace SlotAlignmentOptimizer
                 do
                 {
                     slot[0] = rs.rand_slot();
-                    if (inSlot || rs.rooms[room[0]].Get(slot[0]).SlotFixed)
+                    var firstEvent = rs.rooms[room[0]].Get(slot[0]);
+                    if (inSlot || firstEvent.SlotFixed)
                     {
                         slot[1] = slot[0];
                         Event event1 = rs.rooms[room[1]].Get(slot[1]);

@@ -234,6 +234,13 @@ namespace DefenceAligner
             var p_room = rooms.AddRoom("不都合日程");
             p_room.unchangable();
             all_room.Add(p_room);
+            // 部屋が使えない日時を設定
+            foreach (var t in excel2DB.DB.EachProhibitRoom())
+            {
+                var room_id = t.Item1;
+                var slot = t.Item2;
+                all_room[room_id - 1].events[slot - 1] = Event.Prohibit;
+            }
             // すべてのイベントを適当に部屋に割り当てる
             int room_no = 0;
             var pool = new AttendeePool();
