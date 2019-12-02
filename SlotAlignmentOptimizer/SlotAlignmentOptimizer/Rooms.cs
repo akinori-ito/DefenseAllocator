@@ -65,6 +65,7 @@ namespace SlotAlignmentOptimizer
         Random rand = new Random();
         const double OVERLAP_PENALTY = 10;  // 同時間に同じ人が出現するペナルティ
         const double CHANGE_PENALTY = 0.01; // 連続するスロットに違う人が出現するペナルティ
+        const double GAP_PENALTY = 0.01;    // 同じ審査員の審査にあいだが空いているペナルティ
         const double CONTINUE_BONUS = 0.1;  // 同じ人が連続するスロットに出現するボーナス
         public Rooms(int max)
         {
@@ -115,7 +116,7 @@ namespace SlotAlignmentOptimizer
                         if (prevroom[id] != i)
                         {
                             // 直前のスロットにその人が出現したが部屋が違う場合
-                            // 食前までのスコアを加算
+                            // 直前までのスコアを加算
                             val += (cont_count[id] - 1) * (cont_count[id] - 1);
                             // 出現カウントを1にする
                             cont_count[id] = 1;
@@ -145,6 +146,53 @@ namespace SlotAlignmentOptimizer
                 if (cont_count[i] > 1)
                 {
                     val += (cont_count[i] - 1) * (cont_count[i] - 1);
+                }
+            }
+            return val;
+        }
+        // 同じ審査員のイベントであいだが空いていることに対するペナルティの計算
+        int gap_count(int n_prof)
+        {
+            int[][] appear = new int[][n_prof];
+            int val = 0;
+            for (int i = 0; i < n_prof; i++)
+            {
+                appear[i] = new int[max_events];
+                for (int j = 0; j < max_events; j++)
+                    appear[i][j] = 0;
+            }
+            int val = 0;
+            for (int t = 0; t < max_events; t++)
+            {
+                for (int i = 0; i < rooms.Count; i++)
+                {
+                    if (!rooms[i].changable)
+                        continue;
+                    Event ev = rooms[i].Get(t);
+                    foreach (var a in ev.Attendees)
+                    {
+                        int id = a.getId();
+                        appear[id][t] = 1;
+                    }
+                }
+            }
+            // 最後に直前までの連続出現をカウント
+            for (int i = 0; i < n_prof; i++)
+            int prev = -1;
+            {
+                int prev = -1;
+                for (int t = 0; t < max_events; t++)
+                {
+                    if (appear[i][t] == 1)
+                    {
+                        if (prev != -1)
+                        {
+                            int gap = prev - t - 1;
+                            if (gap >= 4) gap = 4; //4スロット以上空いていたら、それ以上いくら空いていても同じ
+                            val += gap;
+                        }
+                        prev = t;
+                    }
                 }
             }
             return val;
@@ -220,26 +268,28 @@ namespace SlotAlignmentOptimizer
             double exist_loss = exist_count();
             int change_loss = change_count();
             int cont_bonus = continue_count(Nprof);
+            int gap_loss = gap_count(Nprof);
             double loss = exist_loss*OVERLAP_PENALTY+change_loss*CHANGE_PENALTY
-                -cont_bonus*CONTINUE_BONUS;
+                +gap_loss*GAP_PENALTY-cont_bonus*CONTINUE_BONUS;
             double temp = inittemp;
             for (int j = 0; j < Nepoch; j++)
             {
                 for (int i = 0; i < Niter; i++)
                 {
-                    Eventpair p = new Eventpair(this,inSlot);
+                    Eventpair p = new Eventpair(this, inSlot);
                     p.swap();
                     exist_loss = exist_count();
                     if (complexloss)
                     {
                         change_loss = change_count();
                         cont_bonus = continue_count(Nprof);
+                        gap_loss = gap_count(Nprof);
                     } else
                     {
-                        change_loss = cont_bonus = 0;
+                        change_loss = cont_bonus = gap_loss = 0;
                     }
                     double newloss = exist_loss * OVERLAP_PENALTY + change_loss * CHANGE_PENALTY
-                        - cont_bonus * CONTINUE_BONUS;
+                        + gap_loss*GAP_PENALTY - cont_bonus * CONTINUE_BONUS;
                     if (newloss < loss)
                     {
                         loss = newloss;

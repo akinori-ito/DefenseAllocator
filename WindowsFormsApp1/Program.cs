@@ -279,7 +279,7 @@ namespace DefenceAligner
                 p_room.addEvent(ev);
             }
             // テスト用
-            rooms.shuffle(1000);
+            //rooms.shuffle(1000);
 
             // ここから本番
             void callbacklinear(int epoch, int iter, double lossval, int losscount)
@@ -301,7 +301,7 @@ namespace DefenceAligner
                 rooms.anneal(inittemp, nepoch, niter, tconst, pool.maxid + 1, callbacklinear, false);
                 chart.Series.Clear();
                 // 重複解消できたか
-                if (countlabel.Text == "")
+                if (countlabel.Text == "0")
                     break;
                 inittemp /= 10;
             }
