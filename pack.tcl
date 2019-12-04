@@ -22,7 +22,11 @@ foreach xls [glob *.xlsx] {
 file copy $bindir/Release $outdir
 set f [open $outdir/DefenceAllocator.bat w]
 puts $f {@echo off
-Release\DefenceAligner.exe
+if not "%~0"=="%~dp0.\%~nx0" (
+     start /min cmd /c,"%~dp0.\%~nx0" %*
+     exit
+)
+start Release\DefenceAligner.exe
 }
 close $f
 exec zip -r $outdir.zip $outdir
