@@ -35,7 +35,9 @@ namespace DefenceAligner
         {
             var builder = new SQLiteConnectionStringBuilder
             {
-                DataSource = dbfilename
+                DataSource = dbfilename,
+                SyncMode = SynchronizationModes.Off,
+                JournalMode = SQLiteJournalModeEnum.Memory
             };
             conn = new SQLiteConnection(builder.ToString());
             conn.Open();
@@ -57,12 +59,12 @@ namespace DefenceAligner
                         "ID5 INTEGER," +
                         "SLOT INTEGER," +
                         "ROOM INTEGER)";
-                    cmd.ExecuteNonQuery();
+                    issue(cmd);
                 }
                 if (!TableExists("rooms"))
                 {
                     cmd.CommandText = "CREATE TABLE rooms(ROOM_ID INTEGER PRIMARY KEY, ROOM_NAME TEXT)";
-                    cmd.ExecuteNonQuery();
+                    issue(cmd);
                 }
                 if (!TableExists("professor"))
                 {
@@ -71,32 +73,32 @@ namespace DefenceAligner
                         "TITLE NCHAR(5) NOT NULL," +
                         "NAME NCHAR(20) NOT NULL," +
                         "NOTE TEXT)";
-                    cmd.ExecuteNonQuery();
+                    issue(cmd);
                 }
 //                if (!TableExists("date"))
 //                {
 //                    cmd.CommandText = "CREATE TABLE date(SLOT_ID INTEGER, DATE NCHAR(10), TIME NCHAR(30))";
-//                    cmd.ExecuteNonQuery();
+//                    issue(cmd);
 //                }
                 if (!TableExists("prof_prohibit"))
                 {
                     cmd.CommandText = "CREATE TABLE prof_prohibit(" +
                         "PROF_ID INTEGER,SLOT_ID INTEGER)";
-                    cmd.ExecuteNonQuery();
+                    issue(cmd);
 
                 }
                 if (!TableExists("slot"))
                 {
                     cmd.CommandText = "CREATE TABLE slot(" +
                         "SLOT INTEGER PRIMARY KEY, DATE NCHAR(30),TIME NCHAR(60))";
-                    cmd.ExecuteNonQuery();
+                    issue(cmd);
                 }
                 if (!TableExists("room_prohibit"))
                 {
                     cmd.CommandText = "CREATE TABLE room_prohibit(" +
                         "ROOM_ID INTEGER," +
                         "SLOT INTEGER)";
-                    cmd.ExecuteNonQuery();
+                    issue(cmd);
                 }
             }
         }
@@ -108,6 +110,17 @@ namespace DefenceAligner
                 conn.Close();
             }
         }
+        void issue(SQLiteCommand cmd)
+        {
+            try
+            {
+                cmd.ExecuteNonQuery();
+            } catch
+            {
+                throw new DatabaseException("SQL error: command=" + cmd.CommandText);
+            }
+        }
+
         // 特定の項目（テーブル，カラム，値）の存在チェック
         public bool IsRegistered(string table, string column, string value)
         {
@@ -169,7 +182,7 @@ namespace DefenceAligner
                     "'" + title + "'," +
                     "'" + name + "'," +
                     "'" + note + "')";
-                cmd.ExecuteNonQuery();
+                issue(cmd);
                 cmd.CommandText = "SELECT ID FROM professor where NAME='" + name + "'";
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -187,12 +200,13 @@ namespace DefenceAligner
             using (var cmd = conn.CreateCommand())
             {
                 var sql = new StringBuilder();
+                var escapedtitle = title.Replace("'", "''");
                 sql.Append("INSERT INTO events (DEGREE, STUDENT_NO, DEPARTMENT, STUDENT_NAME, PAPER_TITLE, ID1, ID2, ID3, ID4, ID5) VALUES(" +
                      "'" + degree + "'," +
                     "'" + student_id + "'," +
                     "'" + department + "'," +
                     "'" + student_name + "'," +
-                    "'" + title + "',");
+                    "'" + escapedtitle + "',");
                 for (int j = 0; j < prof_id.Length; j++)
                 {
                     sql.Append(prof_id[j].ToString());
@@ -206,7 +220,7 @@ namespace DefenceAligner
                     }
                 }
                 cmd.CommandText = sql.ToString();
-                cmd.ExecuteNonQuery();
+                issue(cmd);
             }
         }
         // イベントにスロットと部屋を登録
@@ -216,7 +230,7 @@ namespace DefenceAligner
             {
                 var sql = "UPDATE events SET SLOT=" + slot.ToString() + ", ROOM=" + room.ToString() + " WHERE STUDENT_NO='" + student_id + "'";
                 cmd.CommandText = sql;
-                cmd.ExecuteNonQuery();
+                issue(cmd);
             }
         }
         // 部屋の登録
@@ -231,7 +245,7 @@ namespace DefenceAligner
                         return;
                 }
                 cmd.CommandText = "INSERT INTO rooms (ROOM_NAME) VALUES('" + roomname + "')";
-                cmd.ExecuteNonQuery();
+                issue(cmd);
             }
         }
         // 部屋名からIDを調べる
@@ -462,7 +476,7 @@ namespace DefenceAligner
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText = "INSERT INTO slot (DATE,TIME) VALUES('" + date + "','" + time + "')";
-                cmd.ExecuteNonQuery();
+                issue(cmd);
             }
         }
 
@@ -535,7 +549,7 @@ namespace DefenceAligner
                 cmd.CommandText = "INSERT INTO prof_prohibit VALUES(" +
                     prof_id.ToString() + "," +
                     slot_id.ToString() + ")";
-                cmd.ExecuteNonQuery();
+                issue(cmd);
             }
         }
         // 不都合日程照会
@@ -574,7 +588,7 @@ namespace DefenceAligner
                 cmd.CommandText = "INSERT INTO room_prohibit VALUES(" +
                     room_id.ToString() + "," +
                     slot_id.ToString() + ")";
-                cmd.ExecuteNonQuery();
+                issue(cmd);
             }
         }
         // 使えない部屋とスロット一覧で繰り返す
