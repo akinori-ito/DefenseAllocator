@@ -88,7 +88,12 @@ namespace SlotAlignmentOptimizer
             }
             Room room = rooms[i];
             int overlap = room.Get(t).overlap(room.Get(t + 1));
-            int changenum = room.Get(t).numberOfAttendees() + room.Get(t + 1).numberOfAttendees() - overlap;
+            // 第１出席者（主査）が連続していたらボーナスを与える
+            if (room.Get(t).Attendees[0] == room.Get(t+1).Attendees[0])
+            {
+                overlap += 10;
+            }
+            int changenum = room.Get(t).numberOfAttendees() + room.Get(t + 1).numberOfAttendees() - overlap*2;
             return changenum;
         }
         int continue_count(int n_prof)
@@ -153,7 +158,7 @@ namespace SlotAlignmentOptimizer
         // 同じ審査員のイベントであいだが空いていることに対するペナルティの計算
         int gap_count(int n_prof)
         {
-            int[][] appear = new int[][n_prof];
+            int[][] appear = new int[n_prof][];
             int val = 0;
             for (int i = 0; i < n_prof; i++)
             {
@@ -161,7 +166,6 @@ namespace SlotAlignmentOptimizer
                 for (int j = 0; j < max_events; j++)
                     appear[i][j] = 0;
             }
-            int val = 0;
             for (int t = 0; t < max_events; t++)
             {
                 for (int i = 0; i < rooms.Count; i++)
@@ -178,7 +182,6 @@ namespace SlotAlignmentOptimizer
             }
             // 最後に直前までの連続出現をカウント
             for (int i = 0; i < n_prof; i++)
-            int prev = -1;
             {
                 int prev = -1;
                 for (int t = 0; t < max_events; t++)
