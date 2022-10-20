@@ -15,6 +15,7 @@ namespace DefenceAligner
         public string Student_Name { get; set; }
         public string Paper_Title { get; set; }
         public int[] Referee_id { get; set; }
+        public int Online { get; set; }
         public DefenseEvent(int id, string degree, string student_no, string department, string student_name, string title)
         {
             Id = id;
@@ -24,6 +25,7 @@ namespace DefenceAligner
             Student_Name = student_name;
             Paper_Title = title;
             Referee_id = new int[5];
+            Online = 0;
         }
         private void a(StringBuilder s, string x, bool last = false)
         {
@@ -47,10 +49,13 @@ namespace DefenceAligner
                 if (Referee_id[i] == -1)
                 {
                     a(str, "", true);
-                    break;
                 }
-                a(str, db.GetProfessorName(Referee_id[i]), i == 4);
+                else
+                {
+                    a(str, db.GetProfessorName(Referee_id[i]), i == 4);
+                }
             }
+            a(str, Online.ToString());
             return str.ToString();
         }
         // 2つのイベントが同時に開催できないかどうか

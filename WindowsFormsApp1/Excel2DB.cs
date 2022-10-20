@@ -130,16 +130,23 @@ namespace DefenceAligner
         {
             DB.Close();
         }
-        string GetColumnString(IRow row, int col)
+        ICell GetColumnCell(IRow row, int col)
         {
             ICell v;
             try
             {
                 v = row.GetCell(col);
-            } catch
-            {
-                return "";
             }
+            catch
+            {
+                return null;
+            }
+            return v;
+        }
+
+        string GetColumnString(IRow row, int col)
+        {
+            ICell v = GetColumnCell(row,col);
             if (v == null)
                 return "";
             string str;
@@ -152,6 +159,21 @@ namespace DefenceAligner
                 str = "";
             }
             return str;
+        }
+        int GetColumnInteger(IRow row, int col)
+        {
+            ICell v = GetColumnCell(row, col);
+            if (v == null)
+                return 0;
+            int val;
+            try
+            {
+                val = (int)v.NumericCellValue;
+            } catch
+            {
+                val = 0;
+            }
+            return val;
         }
 
         IWorkbook GetBook(string filename)
@@ -202,31 +224,44 @@ namespace DefenceAligner
             {
                 var row = sheet.GetRow(i);
                 var student_id = GetColumnString(row,1);
+                if (student_id == "")
+                    return;
                 if (DB.IsRegistered("events", "STUDENT_NO", student_id))
                     continue;
                 var department = GetColumnString(row,2);
                 var student_name = GetColumnString(row,3);
                 var title = GetColumnString(row,4);
-                int[] prof_id = new int[5];
+                int[] prof_id = new int[6];
                 int col = 5;
-                for (int j = 0; j < 5; j++)
+                for (int j = 0; j < 6; j++)
                 {
                     prof_id[j] = -1; // not set
                 }
-                for (int j = 0; j < 5; j++)
+                for (int j = 0; j < 6; j++)
                 {
                     var name = GetColumnString(row,col+1);
                     var t = GetColumnString(row,col);
+                    if (name == "教授" || name == "准教授" || name == "講師" || name == "客員教授")
+                    {
+                        var tmp = name;
+                        name = t;
+                        t = tmp;
+                    }
                     //var note = GetColumnString(row,col + 2);
                     if (t != "")
                     {
                         prof_id[j] = DB.GetProfessorID(false, name, t, "");
                         if (prof_id[j] < 0)
-                            throw new DatabaseException("審査員が登録されていません：" + name);
+                            throw new DatabaseException("審査員が登録されていません：" + name + "("+t+")");
                     }
                     col += 2;
                 }
-                DB.PutEvent("修士",student_id, department, student_name, title, prof_id);
+                var onlinestr = GetColumnString(row,col);
+                int online = 0;
+                if (onlinestr == "オンライン")
+                    online = 1;
+                //Console.WriteLine(student_id + " " + onlinestr+" "+online.ToString());
+                DB.PutEvent("修士",student_id, department, student_name, title, prof_id,online);
             }
         }
         // 審査員の不都合日程読み込み

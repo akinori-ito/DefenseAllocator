@@ -254,17 +254,20 @@ namespace DefenceAligner
                         ev.Attendees.Add(pool.Get(event_str[i]));
                     }
                 }
-                try
+                var online = Int32.Parse(event_str[11]);
+                while (true)
                 {
-                    all_room[room_no].addEvent(ev);
-                } catch
-                {
-                    room_no++;
-                    if (!all_room[room_no].changable)
+                    try
                     {
-                        throw new Exception("イベントが多すぎます");
+                        room_no = rooms.rand_room(online);
+                        all_room[room_no].addEvent(ev);
+                        Console.WriteLine(event_str[1]+"->"+room_no.ToString());
                     }
-                    all_room[room_no].addEvent(ev);
+                    catch
+                    {
+                        continue;
+                    }
+                    break;
                 }
             }
             // 不都合日程割り当て
@@ -276,6 +279,7 @@ namespace DefenceAligner
                     var name = excel2DB.DB.GetProfessorName(prof_id);
                     ev.Attendees.Add(pool.Get(name));
                 }
+                Console.WriteLine(ev.ToString());
                 p_room.addEvent(ev);
             }
             // テスト用
@@ -284,6 +288,7 @@ namespace DefenceAligner
             // ここから本番
             void callbacklinear(int epoch, int iter, double lossval, int losscount)
             {
+                Console.WriteLine("{0} {1} {2} {3}",epoch, iter, lossval, losscount);   
                 int n = epoch * niter + iter;
                 series.Points.AddXY(n, lossval);
                 chart.Update();
@@ -299,6 +304,7 @@ namespace DefenceAligner
                 chart.Series.Add(series);
                 // 全ルームの全スロットで入れ替え
                 rooms.anneal(inittemp, nepoch, niter, tconst, pool.maxid + 1, callbacklinear, false);
+                //rooms.anneal(inittemp, nepoch, niter, tconst, pool.maxid + 1, null, false);
                 chart.Series.Clear();
                 // 重複解消できたか
                 if (countlabel.Text == "0")

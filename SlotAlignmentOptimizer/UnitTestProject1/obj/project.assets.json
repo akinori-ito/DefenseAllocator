@@ -5819,11 +5819,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "G:\\マイドライブ\\MyDocument\\develop\\審査日程作成アプリ\\DefenseAllocator\\SlotAlignmentOptimizer\\UnitTestProject1\\UnitTestProject1.csproj",
+      "projectUniqueName": "G:\\マイドライブ\\MyDocument\\develop\\DefenseAllocator\\SlotAlignmentOptimizer\\UnitTestProject1\\UnitTestProject1.csproj",
       "projectName": "UnitTestProject1",
-      "projectPath": "G:\\マイドライブ\\MyDocument\\develop\\審査日程作成アプリ\\DefenseAllocator\\SlotAlignmentOptimizer\\UnitTestProject1\\UnitTestProject1.csproj",
+      "projectPath": "G:\\マイドライブ\\MyDocument\\develop\\DefenseAllocator\\SlotAlignmentOptimizer\\UnitTestProject1\\UnitTestProject1.csproj",
       "packagesPath": "C:\\Users\\aito\\.nuget\\packages\\",
-      "outputPath": "G:\\マイドライブ\\MyDocument\\develop\\審査日程作成アプリ\\DefenseAllocator\\SlotAlignmentOptimizer\\UnitTestProject1\\obj\\",
+      "outputPath": "G:\\マイドライブ\\MyDocument\\develop\\DefenseAllocator\\SlotAlignmentOptimizer\\UnitTestProject1\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\aito\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -5838,6 +5838,7 @@
       },
       "frameworks": {
         "netcoreapp2.1": {
+          "targetAlias": "netcoreapp2.1",
           "projectReferences": {}
         }
       },
@@ -5849,6 +5850,7 @@
     },
     "frameworks": {
       "netcoreapp2.1": {
+        "targetAlias": "netcoreapp2.1",
         "dependencies": {
           "MSTest.TestAdapter": {
             "target": "Package",
@@ -5879,7 +5881,7 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.402\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
       }
     }
   }

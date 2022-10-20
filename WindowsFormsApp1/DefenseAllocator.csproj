@@ -70,10 +70,6 @@
     <Reference Include="NPOI.OpenXmlFormats, Version=2.4.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
       <HintPath>..\packages\NPOI.2.4.1\lib\net45\NPOI.OpenXmlFormats.dll</HintPath>
     </Reference>
-    <Reference Include="SlotAlignmentOptimizer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\SlotAlignmentOptimizer\SlotAlignmentOptimizer\bin\Debug\SlotAlignmentOptimizer.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SQLite, Version=1.0.109.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
@@ -92,8 +88,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlignmentOptimizer.cs" />
+    <Compile Include="Attendee.cs" />
+    <Compile Include="AttendeePool.cs" />
     <Compile Include="DuplicateChecker.cs" />
     <Compile Include="DefenseEvent.cs" />
+    <Compile Include="Event.cs" />
+    <Compile Include="Room.cs" />
+    <Compile Include="Rooms.cs" />
     <Compile Include="Slot.cs" />
     <Compile Include="DatabaseException.cs" />
     <Compile Include="DBManip.cs" />

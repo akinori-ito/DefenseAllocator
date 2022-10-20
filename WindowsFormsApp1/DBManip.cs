@@ -35,9 +35,7 @@ namespace DefenceAligner
         {
             var builder = new SQLiteConnectionStringBuilder
             {
-                DataSource = dbfilename,
-                SyncMode = SynchronizationModes.Off,
-                JournalMode = SQLiteJournalModeEnum.Memory
+                DataSource = dbfilename
             };
             conn = new SQLiteConnection(builder.ToString());
             conn.Open();
@@ -57,14 +55,16 @@ namespace DefenceAligner
                         "ID3 INTEGER," +
                         "ID4 INTEGER," +
                         "ID5 INTEGER," +
+                        "ID6 INTEGER," +
                         "SLOT INTEGER," +
-                        "ROOM INTEGER)";
-                    issue(cmd);
+                        "ROOM INTEGER," +
+                        "ONLINE INTEGER)";
+                    cmd.ExecuteNonQuery();
                 }
                 if (!TableExists("rooms"))
                 {
                     cmd.CommandText = "CREATE TABLE rooms(ROOM_ID INTEGER PRIMARY KEY, ROOM_NAME TEXT)";
-                    issue(cmd);
+                    cmd.ExecuteNonQuery();
                 }
                 if (!TableExists("professor"))
                 {
@@ -73,32 +73,32 @@ namespace DefenceAligner
                         "TITLE NCHAR(5) NOT NULL," +
                         "NAME NCHAR(20) NOT NULL," +
                         "NOTE TEXT)";
-                    issue(cmd);
+                    cmd.ExecuteNonQuery();
                 }
 //                if (!TableExists("date"))
 //                {
 //                    cmd.CommandText = "CREATE TABLE date(SLOT_ID INTEGER, DATE NCHAR(10), TIME NCHAR(30))";
-//                    issue(cmd);
+//                    cmd.ExecuteNonQuery();
 //                }
                 if (!TableExists("prof_prohibit"))
                 {
                     cmd.CommandText = "CREATE TABLE prof_prohibit(" +
                         "PROF_ID INTEGER,SLOT_ID INTEGER)";
-                    issue(cmd);
+                    cmd.ExecuteNonQuery();
 
                 }
                 if (!TableExists("slot"))
                 {
                     cmd.CommandText = "CREATE TABLE slot(" +
                         "SLOT INTEGER PRIMARY KEY, DATE NCHAR(30),TIME NCHAR(60))";
-                    issue(cmd);
+                    cmd.ExecuteNonQuery();
                 }
                 if (!TableExists("room_prohibit"))
                 {
                     cmd.CommandText = "CREATE TABLE room_prohibit(" +
                         "ROOM_ID INTEGER," +
                         "SLOT INTEGER)";
-                    issue(cmd);
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
@@ -110,17 +110,6 @@ namespace DefenceAligner
                 conn.Close();
             }
         }
-        void issue(SQLiteCommand cmd)
-        {
-            try
-            {
-                cmd.ExecuteNonQuery();
-            } catch
-            {
-                throw new DatabaseException("SQL error: command=" + cmd.CommandText);
-            }
-        }
-
         // 特定の項目（テーブル，カラム，値）の存在チェック
         public bool IsRegistered(string table, string column, string value)
         {
@@ -182,7 +171,7 @@ namespace DefenceAligner
                     "'" + title + "'," +
                     "'" + name + "'," +
                     "'" + note + "')";
-                issue(cmd);
+                cmd.ExecuteNonQuery();
                 cmd.CommandText = "SELECT ID FROM professor where NAME='" + name + "'";
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -195,32 +184,27 @@ namespace DefenceAligner
         }
         // イベントの登録
         public void PutEvent(string degree, string student_id, string department,
-            string student_name, string title, int[] prof_id)
+            string student_name, string title, int[] prof_id, int online = 0)
         {
             using (var cmd = conn.CreateCommand())
             {
                 var sql = new StringBuilder();
-                var escapedtitle = title.Replace("'", "''");
-                sql.Append("INSERT INTO events (DEGREE, STUDENT_NO, DEPARTMENT, STUDENT_NAME, PAPER_TITLE, ID1, ID2, ID3, ID4, ID5) VALUES(" +
+                sql.Append("INSERT INTO events (DEGREE, STUDENT_NO, DEPARTMENT, STUDENT_NAME, PAPER_TITLE, ID1, ID2, ID3, ID4, ID5, ID6, ONLINE) VALUES(" +
                      "'" + degree + "'," +
                     "'" + student_id + "'," +
                     "'" + department + "'," +
                     "'" + student_name + "'," +
-                    "'" + escapedtitle + "',");
-                for (int j = 0; j < prof_id.Length; j++)
+                    "'" + title + "',");
+                for (int j = 0; j < 6; j++)
                 {
-                    sql.Append(prof_id[j].ToString());
-                    if (j == prof_id.Length - 1)
-                    {
-                        sql.Append(")");
-                    }
+                    if (j < prof_id.Length)
+                        sql.Append(prof_id[j].ToString() + ",");
                     else
-                    {
-                        sql.Append(",");
-                    }
+                        sql.Append("-1,");
                 }
+                sql.Append(online.ToString()+");");
                 cmd.CommandText = sql.ToString();
-                issue(cmd);
+                cmd.ExecuteNonQuery();
             }
         }
         // イベントにスロットと部屋を登録
@@ -230,7 +214,7 @@ namespace DefenceAligner
             {
                 var sql = "UPDATE events SET SLOT=" + slot.ToString() + ", ROOM=" + room.ToString() + " WHERE STUDENT_NO='" + student_id + "'";
                 cmd.CommandText = sql;
-                issue(cmd);
+                cmd.ExecuteNonQuery();
             }
         }
         // 部屋の登録
@@ -245,7 +229,7 @@ namespace DefenceAligner
                         return;
                 }
                 cmd.CommandText = "INSERT INTO rooms (ROOM_NAME) VALUES('" + roomname + "')";
-                issue(cmd);
+                cmd.ExecuteNonQuery();
             }
         }
         // 部屋名からIDを調べる
@@ -348,11 +332,11 @@ namespace DefenceAligner
             {
                 var str = new StringBuilder();
                 str.Append("SELECT STUDENT_NO,STUDENT_NAME from events WHERE ");
-                for (int i = 1; i < 7; i++)
+                for (int i = 1; i < 6; i++)
                 {
                     str.Append("ID" + i.ToString() + "=" + prof_id.ToString() + " OR ");
                 }
-                str.Append("ID7=" + prof_id.ToString());
+                str.Append("ID6=" + prof_id.ToString());
                 cmd.CommandText = str.ToString();
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -403,10 +387,11 @@ namespace DefenceAligner
                         // 1番目の要素はIDなので除く
                         for (int i = 0; i < 5; i++)
                             val[i] = reader.GetString(i+1);
-                        for (int i = 5; i < 10; i++)
+                        for (int i = 5; i < 11; i++)
                         {
                             val[i] = GetProfessorName(reader.GetInt32(i+1));
                         }
+                        val[11] = reader.GetInt32(14).ToString();
                         yield return val;
                     }
                 }
@@ -476,7 +461,7 @@ namespace DefenceAligner
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText = "INSERT INTO slot (DATE,TIME) VALUES('" + date + "','" + time + "')";
-                issue(cmd);
+                cmd.ExecuteNonQuery();
             }
         }
 
@@ -549,7 +534,7 @@ namespace DefenceAligner
                 cmd.CommandText = "INSERT INTO prof_prohibit VALUES(" +
                     prof_id.ToString() + "," +
                     slot_id.ToString() + ")";
-                issue(cmd);
+                cmd.ExecuteNonQuery();
             }
         }
         // 不都合日程照会
@@ -588,7 +573,7 @@ namespace DefenceAligner
                 cmd.CommandText = "INSERT INTO room_prohibit VALUES(" +
                     room_id.ToString() + "," +
                     slot_id.ToString() + ")";
-                issue(cmd);
+                cmd.ExecuteNonQuery();
             }
         }
         // 使えない部屋とスロット一覧で繰り返す
@@ -620,7 +605,7 @@ namespace DefenceAligner
                 {
                     cmd.CommandText = "SELECT professor.NAME, events.STUDENT_NO, events.STUDENT_NAME, slot.DATE, slot.TIME, rooms.ROOM_NAME " +
                         "from ((events INNER JOIN professor ON events.ID1 = professor.ID OR events.ID2 = professor.ID OR events.ID3 = professor.ID OR events.ID4 = professor.ID OR " +
-                        "events.ID5 = professor.ID) INNER JOIN slot ON slot.SLOT = events.SLOT) INNER JOIN rooms ON rooms.ROOM_ID = events.ROOM ORDER BY professor.NAME, slot.DATE, slot.TIME";
+                        "events.ID5 = professor.ID OR events.ID6 = professor.ID) INNER JOIN slot ON slot.SLOT = events.SLOT) INNER JOIN rooms ON rooms.ROOM_ID = events.ROOM ORDER BY professor.NAME, slot.DATE, slot.TIME";
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())

@@ -88,12 +88,7 @@ namespace SlotAlignmentOptimizer
             }
             Room room = rooms[i];
             int overlap = room.Get(t).overlap(room.Get(t + 1));
-            // 第１出席者（主査）が連続していたらボーナスを与える
-            if (room.Get(t).Attendees[0] == room.Get(t+1).Attendees[0])
-            {
-                overlap += 10;
-            }
-            int changenum = room.Get(t).numberOfAttendees() + room.Get(t + 1).numberOfAttendees() - overlap*2;
+            int changenum = room.Get(t).numberOfAttendees() + room.Get(t + 1).numberOfAttendees() - overlap;
             return changenum;
         }
         int continue_count(int n_prof)
@@ -293,6 +288,7 @@ namespace SlotAlignmentOptimizer
                     }
                     double newloss = exist_loss * OVERLAP_PENALTY + change_loss * CHANGE_PENALTY
                         + gap_loss*GAP_PENALTY - cont_bonus * CONTINUE_BONUS;
+                    Console.WriteLine("Anneal: {0} {1} {2}", j, i, newloss);
                     if (newloss < loss)
                     {
                         loss = newloss;
