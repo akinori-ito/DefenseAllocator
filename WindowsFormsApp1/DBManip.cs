@@ -182,6 +182,10 @@ namespace DefenceAligner
             return id;
 
         }
+        static string strEsc(string s)
+        {
+            return "'" + s.Replace("'", "''").Replace("\n"," ") + "'";
+        }
         // イベントの登録
         public void PutEvent(string degree, string student_id, string department,
             string student_name, string title, int[] prof_id, int online = 0)
@@ -189,12 +193,12 @@ namespace DefenceAligner
             using (var cmd = conn.CreateCommand())
             {
                 var sql = new StringBuilder();
-                sql.Append("INSERT INTO events (DEGREE, STUDENT_NO, DEPARTMENT, STUDENT_NAME, PAPER_TITLE, ID1, ID2, ID3, ID4, ID5, ID6, ONLINE) VALUES(" +
-                     "'" + degree + "'," +
-                    "'" + student_id + "'," +
-                    "'" + department + "'," +
-                    "'" + student_name + "'," +
-                    "'" + title + "',");
+                sql.Append("INSERT INTO events (DEGREE, STUDENT_NO, DEPARTMENT, STUDENT_NAME, PAPER_TITLE, ID1, ID2, ID3, ID4, ID5, ID6, ONLINE) VALUES(" + 
+                    strEsc(degree)+","+ 
+                    strEsc(student_id) + "," +
+                    strEsc(department) + "," +
+                    strEsc(student_name) + "," +
+                    strEsc(title)+",");
                 for (int j = 0; j < 6; j++)
                 {
                     if (j < prof_id.Length)
@@ -204,6 +208,7 @@ namespace DefenceAligner
                 }
                 sql.Append(online.ToString()+");");
                 cmd.CommandText = sql.ToString();
+                //Console.WriteLine(cmd.CommandText);
                 cmd.ExecuteNonQuery();
             }
         }

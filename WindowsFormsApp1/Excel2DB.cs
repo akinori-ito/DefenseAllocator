@@ -241,7 +241,10 @@ namespace DefenceAligner
                 {
                     var name = GetColumnString(row,col+1);
                     var t = GetColumnString(row,col);
-                    if (name == "教授" || name == "准教授" || name == "講師" || name == "客員教授")
+                    if (name == "教授" || name == "准教授" || 
+                        name == "講師" || name == "客員教授" ||
+                        name == "特任教授" || name == "特任准教授"||
+                        name == "助教")
                     {
                         var tmp = name;
                         name = t;
@@ -290,7 +293,7 @@ namespace DefenceAligner
                 string time = GetColumnString(row1, i);
                 if (time == "")
                     break;
-                time = time.Replace(" ", "");
+                time = time.Replace(" ", "").Replace("：",":");
                 int slot = DB.GetSlot(date, time);
                 colslot[i] = slot;
             }
@@ -344,7 +347,7 @@ namespace DefenceAligner
                 string time = GetColumnString(row1, i);
                 if (time == "")
                     break;
-                time = time.Replace(" ", "").Replace("\r", "").Replace("\n", "");
+                time = time.Replace(" ", "").Replace("\r", "").Replace("\n", "").Replace("：",":");
                 int slot = DB.GetSlot(date, time);
                 colslot[i] = slot;
             }

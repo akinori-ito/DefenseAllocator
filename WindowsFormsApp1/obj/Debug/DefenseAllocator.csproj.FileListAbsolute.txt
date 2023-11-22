@@ -19,3 +19,24 @@ G:\マイドライブ\MyDocument\develop\DefenseAllocator\WindowsFormsApp1\obj\D
 G:\マイドライブ\MyDocument\develop\DefenseAllocator\WindowsFormsApp1\obj\Debug\DefenseAllocator.csproj.CopyComplete
 G:\マイドライブ\MyDocument\develop\DefenseAllocator\WindowsFormsApp1\obj\Debug\DefenceAligner.exe
 G:\マイドライブ\MyDocument\develop\DefenseAllocator\WindowsFormsApp1\obj\Debug\DefenceAligner.pdb
+C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\DefenceAligner.exe.config
+C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\DefenceAligner.exe
+C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\DefenceAligner.pdb
+C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\ICSharpCode.SharpZipLib.dll
+C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\NPOI.dll
+C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\NPOI.OOXML.dll
+C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\NPOI.OpenXml4Net.dll
+C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\NPOI.OpenXmlFormats.dll
+C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\System.Data.SQLite.dll
+C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\ICSharpCode.SharpZipLib.xml
+C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\System.Data.SQLite.xml
+C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\System.Data.SQLite.dll.config
+C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\obj\Debug\DefenseAllocator.csproj.AssemblyReference.cache
+C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\obj\Debug\DefenseAllocator.csproj.SuggestedBindingRedirects.cache
+C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\obj\Debug\DefenceAligner.Form1.resources
+C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\obj\Debug\DefenceAligner.Properties.Resources.resources
+C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\obj\Debug\DefenseAllocator.csproj.GenerateResource.cache
+C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\obj\Debug\DefenseAllocator.csproj.CoreCompileInputs.cache
+C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\obj\Debug\DefenseAllocator.csproj.CopyComplete
+C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\obj\Debug\DefenceAligner.exe
+C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\obj\Debug\DefenceAligner.pdb
