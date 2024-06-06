@@ -120,9 +120,9 @@ namespace DefenceAligner
             try
             {
                 DB = new DBManip(dbfilename);
-            } catch
+            } catch(DatabaseException ex)
             {
-                throw new DatabaseException("データベースが開けません：" + dbfilename);
+                throw new DatabaseException(ex.Message+" データベースが開けません：" + dbfilename);
             }
         }
 

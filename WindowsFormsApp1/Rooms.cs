@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -317,6 +318,7 @@ namespace SlotAlignmentOptimizer
             double loss = exist_loss*OVERLAP_PENALTY+change_loss*CHANGE_PENALTY
                 +gap_loss*GAP_PENALTY-cont_bonus*CONTINUE_BONUS;
             double temp = inittemp;
+            StreamWriter log = new StreamWriter("process.log",true);
             for (int j = 0; j < Nepoch; j++)
             {
                 for (int i = 0; i < Niter; i++)
@@ -335,10 +337,11 @@ namespace SlotAlignmentOptimizer
                     }
                     double newloss = exist_loss * OVERLAP_PENALTY + change_loss * CHANGE_PENALTY
                         + gap_loss*GAP_PENALTY - cont_bonus * CONTINUE_BONUS;
-                    Console.WriteLine("Anneal: {0} {1} {2}", j, i, newloss);
+                    DateTime now = DateTime.Now;
                     if (newloss < loss)
                     {
                         loss = newloss;
+                        log.WriteLine("Anneal: {0} {1} {2} {3}", j, i, newloss,now.ToString());
                         if (callback != null)
                         {
                             callback(j, i, loss, (int)exist_loss);
@@ -350,6 +353,7 @@ namespace SlotAlignmentOptimizer
                         if (rand.NextDouble() < prob)
                         {
                             loss = newloss;
+                            log.WriteLine("Anneal: {0} {1} {2} {3}", j, i, newloss,now.ToString());
                             if (callback != null)
                             {
                                 callback(j, i, loss, (int)exist_loss);
@@ -363,6 +367,7 @@ namespace SlotAlignmentOptimizer
                 }
                 temp /= tconst;
             }
+            log.Close();
         }
 
     }

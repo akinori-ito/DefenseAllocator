@@ -37,8 +37,26 @@ namespace DefenceAligner
             {
                 DataSource = dbfilename
             };
-            conn = new SQLiteConnection(builder.ToString());
-            conn.Open();
+            try
+            {
+                conn = new SQLiteConnection(builder.ToString());
+                conn.Open();
+            }
+            catch (SQLiteException ex)
+            {
+                throw new DatabaseException("SQLiteException");
+            }
+            catch (InvalidOperationException ex) {
+                throw new DatabaseException("InvalidOperationException");
+            }
+            catch (ArgumentException ex)
+            {
+                throw new DatabaseException("ArgumentException");
+            }
+            catch (NotSupportedException ex)
+            {
+                throw new DatabaseException("NotSupportedException");
+            }
             using (var cmd = conn.CreateCommand())
             {
                 if (!TableExists("events"))
