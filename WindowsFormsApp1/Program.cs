@@ -342,10 +342,10 @@ namespace DefenceAligner
 
         void OutputResult(string outfile, string result)
         {
-            using (StreamWriter wr = new StreamWriter("output.xml"))
-            {
-                wr.WriteLine(result);
-            }
+            //using (StreamWriter wr = new StreamWriter("output.xml"))
+            //{
+            //    wr.WriteLine(result);
+            //}
             var resultxml = XDocument.Parse(result);
             var roomname = new List<string>();
             var events = new List<List<string>>();
