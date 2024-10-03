@@ -248,14 +248,14 @@ namespace DefenceAligner
             foreach (var event_str in excel2DB.DB.EachEventString())
             {
                 var ev = new Event(event_str[1]); //学籍番号
-                for (int i = 5; i < 10; i++)
+                for (int i = 5; i < 12; i++)
                 {
                     if (event_str[i] != "")
                     {
                         ev.Attendees.Add(pool.Get(event_str[i]));
                     }
                 }
-                var online = Int32.Parse(event_str[11]);
+                var online = Int32.Parse(event_str[12]);
                 while (true)
                 {
                     try

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Data.SQLite;
 using System.IO;
 using NPOI.SS.UserModel;
+using System.Xml.Linq;
 
 namespace DefenceAligner
 {
@@ -231,20 +232,22 @@ namespace DefenceAligner
                 var department = GetColumnString(row,2);
                 var student_name = GetColumnString(row,3);
                 var title = GetColumnString(row,4);
-                int[] prof_id = new int[6];
+                int[] prof_id = new int[7];
                 int col = 5;
-                for (int j = 0; j < 6; j++)
+                for (int j = 0; j < 7; j++)
                 {
                     prof_id[j] = -1; // not set
                 }
-                for (int j = 0; j < 6; j++)
+                String[] titles =
                 {
-                    var name = GetColumnString(row,col+1);
-                    var t = GetColumnString(row,col);
-                    if (name == "教授" || name == "准教授" || 
-                        name == "講師" || name == "客員教授" ||
-                        name == "特任教授" || name == "特任准教授"||
-                        name == "助教")
+                    "教授","准教授","講師","客員教授","特任教授",
+                    "特任准教授","助教","非常勤講師","名誉教授"
+                };
+                for (int j = 0; j < 7; j++)
+                {
+                    var name = GetColumnString(row,col+1).Replace("　","");
+                    var t = GetColumnString(row,col).Replace("　", "");
+                    if (titles.Contains(name))
                     {
                         var tmp = name;
                         name = t;
@@ -263,6 +266,13 @@ namespace DefenceAligner
                 int online = 0;
                 if (onlinestr == "オンライン")
                     online = 1;
+                else if (onlinestr != "対面")
+                {
+                    throw new DatabaseException(
+                        (i+1).ToString()+"行"+
+                        (col+1).ToString()+"列: "+
+                        "オンラインか対面を指定してください");
+                }
                 //Console.WriteLine(student_id + " " + onlinestr+" "+online.ToString());
                 DB.PutEvent("修士",student_id, department, student_name, title, prof_id,online);
             }

@@ -24,7 +24,7 @@ namespace DefenceAligner
             Department = department;
             Student_Name = student_name;
             Paper_Title = title;
-            Referee_id = new int[5];
+            Referee_id = new int[8];
             Online = 0;
         }
         private void a(StringBuilder s, string x, bool last = false)

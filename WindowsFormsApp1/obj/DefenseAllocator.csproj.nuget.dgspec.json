@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\a_ito\\OneDrive\\MC審査\\DefenseAllocator\\WindowsFormsApp1\\DefenseAllocator.csproj": {}
+    "C:\\Users\\Akinori Ito\\OneDrive\\MC審査\\DefenseAllocator\\WindowsFormsApp1\\DefenseAllocator.csproj": {}
   },
   "projects": {
-    "C:\\Users\\a_ito\\OneDrive\\MC審査\\DefenseAllocator\\WindowsFormsApp1\\DefenseAllocator.csproj": {
+    "C:\\Users\\Akinori Ito\\OneDrive\\MC審査\\DefenseAllocator\\WindowsFormsApp1\\DefenseAllocator.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\a_ito\\OneDrive\\MC審査\\DefenseAllocator\\WindowsFormsApp1\\DefenseAllocator.csproj",
+        "projectUniqueName": "C:\\Users\\Akinori Ito\\OneDrive\\MC審査\\DefenseAllocator\\WindowsFormsApp1\\DefenseAllocator.csproj",
         "projectName": "DefenceAligner",
-        "projectPath": "C:\\Users\\a_ito\\OneDrive\\MC審査\\DefenseAllocator\\WindowsFormsApp1\\DefenseAllocator.csproj",
-        "packagesPath": "C:\\Users\\a_ito\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\a_ito\\OneDrive\\MC審査\\DefenseAllocator\\WindowsFormsApp1\\obj\\",
+        "projectPath": "C:\\Users\\Akinori Ito\\OneDrive\\MC審査\\DefenseAllocator\\WindowsFormsApp1\\DefenseAllocator.csproj",
+        "packagesPath": "C:\\Users\\Akinori Ito\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Akinori Ito\\OneDrive\\MC審査\\DefenseAllocator\\WindowsFormsApp1\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\a_ito\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Akinori Ito\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -141,7 +141,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

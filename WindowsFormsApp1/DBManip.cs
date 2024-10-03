@@ -74,6 +74,7 @@ namespace DefenceAligner
                         "ID4 INTEGER," +
                         "ID5 INTEGER," +
                         "ID6 INTEGER," +
+                        "ID7 INTEGER," +
                         "SLOT INTEGER," +
                         "ROOM INTEGER," +
                         "ONLINE INTEGER)";
@@ -211,13 +212,13 @@ namespace DefenceAligner
             using (var cmd = conn.CreateCommand())
             {
                 var sql = new StringBuilder();
-                sql.Append("INSERT INTO events (DEGREE, STUDENT_NO, DEPARTMENT, STUDENT_NAME, PAPER_TITLE, ID1, ID2, ID3, ID4, ID5, ID6, ONLINE) VALUES(" + 
+                sql.Append("INSERT INTO events (DEGREE, STUDENT_NO, DEPARTMENT, STUDENT_NAME, PAPER_TITLE, ID1, ID2, ID3, ID4, ID5, ID6, ID7, ONLINE) VALUES(" + 
                     strEsc(degree)+","+ 
                     strEsc(student_id) + "," +
                     strEsc(department) + "," +
                     strEsc(student_name) + "," +
                     strEsc(title)+",");
-                for (int j = 0; j < 6; j++)
+                for (int j = 0; j < 7; j++)
                 {
                     if (j < prof_id.Length)
                         sql.Append(prof_id[j].ToString() + ",");
@@ -406,15 +407,15 @@ namespace DefenceAligner
                 {
                     while (reader.Read())
                     {
-                        string[] val = new string[12];
+                        string[] val = new string[13];
                         // 1番目の要素はIDなので除く
                         for (int i = 0; i < 5; i++)
                             val[i] = reader.GetString(i+1);
-                        for (int i = 5; i < 11; i++)
+                        for (int i = 5; i < 12; i++)
                         {
                             val[i] = GetProfessorName(reader.GetInt32(i+1));
                         }
-                        val[11] = reader.GetInt32(14).ToString();
+                        val[12] = reader.GetInt32(15).ToString();
                         yield return val;
                     }
                 }
@@ -439,7 +440,7 @@ namespace DefenceAligner
                             reader.GetString(5)   // PAPER_TITLE
                         );
 
-                        for (int i = 0; i < 5; i++)
+                        for (int i = 0; i < 7; i++)
                         {
                             ev.Referee_id[i] = reader.GetInt32(i+6);
                         }
@@ -468,7 +469,7 @@ namespace DefenceAligner
                             reader.GetString(5)   // PAPER_TITLE
                         );
 
-                        for (int i = 0; i < 5; i++)
+                        for (int i = 0; i < 7; i++)
                         {
                             ev.Referee_id[i] = reader.GetInt32(i+6);
                         }
