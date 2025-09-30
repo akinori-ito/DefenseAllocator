@@ -57,6 +57,10 @@ namespace DefenceAligner
             {
                 throw new DatabaseException("NotSupportedException");
             }
+            CreateTables();
+        }
+        public void CreateTables() 
+        { 
             using (var cmd = conn.CreateCommand())
             {
                 if (!TableExists("events"))
@@ -127,6 +131,29 @@ namespace DefenceAligner
             if (conn != null)
             {
                 conn.Close();
+            }
+        }
+        // 全てのテーブルを削除
+        public void ClearTables()
+        {
+            using (var cmd = conn.CreateCommand())
+            {
+                var tables = new List<string>();
+                cmd.CommandText = "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'";
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        reader.Read();
+                        tables.Add(reader.GetString(0));
+                    }
+                }
+                foreach (string table in tables)
+                {
+                    cmd.CommandText = "DROP TABLE " + table;
+                    cmd.ExecuteNonQuery();
+                }
+
             }
         }
         // 特定の項目（テーブル，カラム，値）の存在チェック
