@@ -138,20 +138,17 @@ namespace DefenceAligner
         {
             using (var cmd = conn.CreateCommand())
             {
-                var tables = new List<string>();
-                cmd.CommandText = "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'";
-                using (var reader = cmd.ExecuteReader())
+                var tables = new string[]
                 {
-                    if (reader.HasRows)
-                    {
-                        reader.Read();
-                        tables.Add(reader.GetString(0));
-                    }
-                }
+                    "events","prof_prohibit","professor","room_prohibit","rooms","slot"
+                };
                 foreach (string table in tables)
                 {
-                    cmd.CommandText = "DROP TABLE " + table;
-                    cmd.ExecuteNonQuery();
+                    if (TableExists(table))
+                    {
+                        cmd.CommandText = "DROP TABLE " + table;
+                        cmd.ExecuteNonQuery();
+                    }
                 }
 
             }

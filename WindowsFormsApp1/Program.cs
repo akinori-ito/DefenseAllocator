@@ -81,12 +81,12 @@ namespace DefenceAligner
                 excel2DB = null;
                 throw ex;
             }
-            excel2DB.DB.ClearTables();
-            excel2DB.DB.CreateTables();
         }
         public void ReadExcel(string filename)
         {
             Check_DB_is_not_open();
+            excel2DB.DB.ClearTables();
+            excel2DB.DB.CreateTables();
             try
             {
                 excel2DB.ReadExcel(filename,form);

@@ -160,3 +160,16 @@ C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\obj\Deb
 C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\obj\Debug\net8.0-windows\DefenceAligner.pdb
 C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\obj\Debug\net8.0-windows\DefenseAllocator.genruntimeconfig.cache
 C:\Users\Akinori Ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\obj\Debug\net8.0-windows\ref\DefenceAligner.dll
+C:\Users\a_ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\net8.0-windows\Microsoft.Bcl.Cryptography.dll
+C:\Users\a_ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\net8.0-windows\NSax.dll
+C:\Users\a_ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\net8.0-windows\System.Configuration.ConfigurationManager.dll
+C:\Users\a_ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\net8.0-windows\System.Diagnostics.EventLog.dll
+C:\Users\a_ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\net8.0-windows\System.Formats.Asn1.dll
+C:\Users\a_ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\net8.0-windows\System.Security.Cryptography.Pkcs.dll
+C:\Users\a_ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\net8.0-windows\System.Security.Cryptography.ProtectedData.dll
+C:\Users\a_ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\net8.0-windows\System.Text.Encoding.CodePages.dll
+C:\Users\a_ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\net8.0-windows\ZString.dll
+C:\Users\a_ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\System.Diagnostics.EventLog.Messages.dll
+C:\Users\a_ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\System.Diagnostics.EventLog.dll
+C:\Users\a_ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll
+C:\Users\a_ito\OneDrive\MC審査\DefenseAllocator\WindowsFormsApp1\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\System.Text.Encoding.CodePages.dll
