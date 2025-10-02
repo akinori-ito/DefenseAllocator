@@ -266,7 +266,7 @@ namespace DefenceAligner
             }
         }
         // 部屋の登録
-            public void PutRoom(string roomname)
+        public void PutRoom(string roomname)
         {
             using (var cmd = conn.CreateCommand())
             {
@@ -278,6 +278,23 @@ namespace DefenceAligner
                 }
                 cmd.CommandText = "INSERT INTO rooms (ROOM_NAME) VALUES('" + roomname + "')";
                 cmd.ExecuteNonQuery();
+            }
+        }
+        // オンライン部屋があるか調べ、なかったら追加
+        public void ConfirmOnlineRoom()
+        {
+            int n_online = 0;
+            foreach (string rname in EachRoom())
+            {
+                if (rname.StartsWith("オンライン"))
+                    n_online++;
+            }
+            if (n_online == 0)
+            {
+                for (int i = 1; i <= 3; i++ )
+                {
+                    PutRoom("オンライン" + i.ToString());
+                }
             }
         }
         // 部屋名からIDを調べる

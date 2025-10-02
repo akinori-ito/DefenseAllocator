@@ -203,6 +203,7 @@ namespace DefenceAligner
                 DB.PutRoom(r);
                 form.CheckMark("チェックマーク：審査室", true);
             }
+            DB.ConfirmOnlineRoom();
             // 日時情報
             foreach (var d in sheet0.Dates)
             {
