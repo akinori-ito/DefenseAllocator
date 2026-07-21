@@ -1,2 +1,9 @@
 *~
 *.cache
+.vs/
+bin/
+obj/
+packages/
+**/.vs/
+**/bin/
+**/obj/
